@@ -40,20 +40,14 @@ public class AwsParameterStoreEnvironmentRepositoryFactory implements
 	public AwsParameterStoreEnvironmentRepository build(AwsParameterStoreEnvironmentProperties environmentProperties) {
 		AWSSimpleSystemsManagementClientBuilder clientBuilder = AWSSimpleSystemsManagementClientBuilder.standard();
 
-		String region = environmentProperties.getRegion();
-
-		if (StringUtils.hasLength(region)) {
-			Regions awsRegion = Regions.fromName(region);
-
-			clientBuilder.withRegion(awsRegion);
-
-			String endpoint = environmentProperties.getEndpoint();
-
-			if (StringUtils.hasLength(endpoint)) {
+		if (environmentProperties.getRegion() != null) {
+			if (environmentProperties.getEndpoint() != null) {
 				AwsClientBuilder.EndpointConfiguration endpointConfiguration = new AwsClientBuilder.EndpointConfiguration(
-						endpoint, awsRegion.getName());
-
+					environmentProperties.getEndpoint(), environmentProperties.getRegion());
 				clientBuilder.withEndpointConfiguration(endpointConfiguration);
+			}
+			else {
+				clientBuilder.withRegion(environmentProperties.getRegion());
 			}
 		}
 

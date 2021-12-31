@@ -695,6 +695,16 @@ public class AwsParameterStoreEnvironmentRepositoryTests {
 		assertThat(result).usingRecursiveComparison().withStrictTypeChecking().isEqualTo(expected);
 	}
 
+	@Test
+	public void factoryCustomizable() {
+		AwsParameterStoreEnvironmentRepositoryFactory factory = new AwsParameterStoreEnvironmentRepositoryFactory(new ConfigServerProperties());
+		AwsParameterStoreEnvironmentProperties properties = new AwsParameterStoreEnvironmentProperties();
+		properties.setRegion("us-east-1");
+		properties.setEndpoint("https://myawsendpoint/");
+		AwsParameterStoreEnvironmentRepository repository = factory.build(properties);
+		assertThat(repository).isNotNull();
+	}
+
 	private void setupAwsSsmClientMocks(Environment environment) {
 		setupAwsSsmClientMocks(environment, false, false);
 	}
